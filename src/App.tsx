@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box, Button } from '@material-ui/core'
+import { FormProvider, useForm } from 'react-hook-form'
+import Input from './components/Input'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+type FormFields = {
+  name: string
 }
 
-export default App;
+function App() {
+  const formMethods = useForm<FormFields>({
+    mode: 'onSubmit',
+    defaultValues: {
+      name: ''
+    },
+  })
+
+  const handleSubmit = (data: FormFields) => {
+    console.log(data)
+  }
+
+  return (
+    <FormProvider {...formMethods}>
+      <Box
+        width={256}
+        component="form"
+        style={{ padding: '24px' }}
+        onSubmit={formMethods.handleSubmit(handleSubmit)}
+      >
+        <Input
+          name="name"
+          rules={{
+            required: { value: true, message: 'This field is required' }
+          }}
+          inputProps={{
+            label: 'Name',
+            variant: 'outlined',
+            fullWidth: true,
+            style: {
+              marginBottom: '16px',
+            },
+          }}
+        />
+        <Box>
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Submit
+          </Button>
+        </Box>
+      </Box>
+    </FormProvider>
+  )
+}
+
+export default App
